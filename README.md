@@ -2,6 +2,6 @@
 
 Let's you search music from cli
 
-#####Motivation
+##### Motivation
 
 To learn scala!!
