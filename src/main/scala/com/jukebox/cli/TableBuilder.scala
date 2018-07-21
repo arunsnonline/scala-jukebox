@@ -27,7 +27,7 @@ class RowArtist extends Artist {
   }
 
   private def drawRowBottom(maxCellHeight: Int, tableRow: TableRow, horizontalDelimiter: String) = {
-    import out.CliOutRenderer._
+    import CliOutRenderer._
     maxCellHeight repeat {
       for (tableCell <- tableRow.cellList) {
         drawContinous(getDelimiter(tableCell) + (" " * tableCell.cellWidth), 1)
@@ -48,12 +48,12 @@ class RowArtist extends Artist {
 
 abstract class Artist {
   def drawContinous(value: String, numberOfTimes: Int): Unit = {
-    import out.CliOutRenderer._
+    import CliOutRenderer._
     numberOfTimes repeat print(value)
   }
 
   def drawContinousAndBreak(value: String, numberOfTimes: Int): Unit = {
-    import out.CliOutRenderer._
+    import CliOutRenderer._
     numberOfTimes repeat print(value)
     println()
   }
