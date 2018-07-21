@@ -4,37 +4,41 @@ sealed trait BaseTableMeta
 
 case class TableRow(numberOfColumns: Int = 0,
                     rowDelimiter: String = "-",
+                    rowHeight: Int = 1,
                     cellList: List[TableCell]) extends BaseTableMeta
 
 case class TableCell(cellWidth: Int = 5,
-                     cellHeight: Int = 1,
                      cellContent: String = "",
                      cellDelimiter: String = "|") extends BaseTableMeta
 
-class RowArtist extends Artist {
+class RowArtist {
 
-  def drawFirstRow(tableRow: TableRow) = {
-    val maxCellHeight = tableRow.cellList.map(tc => tc.cellHeight).max
-    val horizontalDelimiter = tableRow.cellList.map(tc => getDelimiter(tableRow) * tc.cellWidth).foldRight("")(_ + _)
-    drawContinousAndBreak(horizontalDelimiter, 1)
-    drawRowBottom(maxCellHeight, tableRow, horizontalDelimiter)
+  def drawHeaderRow(tableRow: TableRow) = {
+    val rowTop = tableRow.cellList
+      .map(tc => getDelimiter(tableRow) * tc.cellWidth)
+      .foldRight("")(_ + _)
+    val rowBottom = rowTop
+    val rowContent = tableRow.cellList
+      .map(tc => getDelimiter(tc) + (" " * tc.cellWidth))
+      .foldRight("")(_ + _)
+
+    import RepeatAction._
+    println(rowTop)
+    tableRow.rowHeight times println(rowContent)
+    println(rowBottom)
   }
 
   def drawNextRow(tableRow: TableRow) = {
-    val maxCellHeight = tableRow.cellList.map(tc => tc.cellHeight).max
-    val horizontalDelimiter = tableRow.cellList.map(tc => getDelimiter(tableRow) * tc.cellWidth).foldRight("")(_ + _)
-    drawRowBottom(maxCellHeight, tableRow, horizontalDelimiter)
-  }
+    val rowBottom = tableRow.cellList
+      .map(tc => getDelimiter(tableRow) * tc.cellWidth)
+      .foldRight("")(_ + _)
+    val rowContent = tableRow.cellList
+      .map(tc => getDelimiter(tc) + (" " * tc.cellWidth))
+      .foldRight("")(_ + _)
 
-  private def drawRowBottom(maxCellHeight: Int, tableRow: TableRow, horizontalDelimiter: String) = {
-    import CliOutRenderer._
-    maxCellHeight repeat {
-      for (tableCell <- tableRow.cellList) {
-        drawContinous(getDelimiter(tableCell) + (" " * tableCell.cellWidth), 1)
-      }
-      println()
-    }
-    drawContinousAndBreak(horizontalDelimiter, 1)
+    import RepeatAction._
+    tableRow.rowHeight times println(rowContent)
+    println(rowBottom)
   }
 
   private def getDelimiter(tableMeta: BaseTableMeta): String = {
@@ -46,16 +50,4 @@ class RowArtist extends Artist {
   }
 }
 
-abstract class Artist {
-  def drawContinous(value: String, numberOfTimes: Int): Unit = {
-    import CliOutRenderer._
-    numberOfTimes repeat print(value)
-  }
-
-  def drawContinousAndBreak(value: String, numberOfTimes: Int): Unit = {
-    import CliOutRenderer._
-    numberOfTimes repeat print(value)
-    println()
-  }
-}
 

@@ -1,9 +1,9 @@
 package com.jukebox.cli
 
-object CliOutRenderer {
+object RepeatAction {
 
   implicit class Repeat(count: Int) {
-    def repeat(doIt: => Unit) = {
+    def times(doIt: => Unit) = {
       def loop(loopCount: Int) {
         if(loopCount > 0) {
           doIt
